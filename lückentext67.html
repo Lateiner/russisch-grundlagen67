@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russisch-Trainer: Verben des Sprechens</title>
+    <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-bg: #d4edda;
+            --success-border: #28a745;
+            --error-bg: #f8d7da;
+            --error-border: #dc3545;
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: var(--primary-color);
+        }
+
+        .intro-box {
+            background: #eef7fd;
+            padding: 20px;
+            border-left: 6px solid var(--secondary-color);
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        .exercise-section {
+            margin-bottom: 40px;
+        }
+
+        .exercise-row {
+            margin-bottom: 15px;
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .exercise-row:hover {
+            background-color: #fafafa;
+        }
+
+        .sentence-num {
+            font-weight: bold;
+            color: var(--secondary-color);
+            min-width: 25px;
+        }
+
+        select {
+            padding: 6px 10px;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px; 
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        select:focus {
+            border-color: var(--secondary-color);
+        }
+
+        .correct {
+            background-color: var(--success-bg) !important;
+            border-color: var(--success-border) !important;
+            color: #155724 !important;
+        }
+
+        .incorrect {
+            background-color: var(--error-bg) !important;
+            border-color: var(--error-border) !important;
+            color: #721c24 !important;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            justify-content: flex-end;
+        }
+
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .btn-reset { background-color: #95a5a6; color: white; }
+        .btn-sol { background-color: #f39c12; color: white; }
+        button:hover { opacity: 0.9; }
+
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .exercise-row { font-size: 15px; }
+            select { width: 100%; margin: 5px 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Russische Grammatik</h1>
+    <h2>Lückentext: Verben des Sprechens</h2>
+
+    <div class="intro-box">
+        <strong>Kurzanleitung:</strong> Wählen Sie für jede Lücke das passende Verb aus.
+        <ul>
+            <li><strong>ГОВОРИТЬ / СКАЗАТЬ:</strong> Kurze Info, einseitige Mitteilung.</li>
+            <li><strong>РАЗГОВАРИВАТЬ:</strong> Dialog, Unterhaltung, Austausch.</li>
+            <li><strong>РАССКАЗЫВАТЬ:</strong> Lange Geschichte, Bericht, Erzählung.</li>
+        </ul>
+    </div>
+
+    <!-- Übungsblock 1 -->
+    <div class="exercise-section" id="block1">
+        <div class="exercise-row">
+            <span class="sentence-num">1.</span>
+            Я часто 
+            <select onchange="check(this, 'разговариваю')">
+                <option value="">---</option>
+                <option value="скажу">скажу</option>
+                <option value="разговариваю">разговариваю</option>
+                <option value="рассказываю">рассказываю</option>
+            </select>
+            с другом по телефону.
+        </div>
+        <div class="exercise-row">
+            <span class="sentence-num">2.</span>
+            Он 
+            <select onchange="check(this, 'сказал')">
+                <option value="">---</option>
+                <option value="сказал">сказал</option>
+                <option value="разговаривал">разговаривал</option>
+                <option value="рассказал">рассказал</option>
+            </select>
+            мне „Привет“.
+        </div>
+        <div class="exercise-row">
+            <span class="sentence-num">3.</span>
+            Бабушка каждый вечер 
+            <select onchange="check(this, 'рассказывает')">
+                <option value="">---</option>
+                <option value="говорит">говорит</option>
+                <option value="рассказывает">рассказывает</option>
+                <option value="разговаривает">разговаривает</option>
+            </select>
+            нам сказки.
+        </div>
+        <div class="exercise-row">
+            <span class="sentence-num">4.</span>
+            Ты очень хорошо 
+            <select onchange="check(this, 'говоришь')">
+                <option value="">---</option>
+                <option value="рассказываешь">рассказываешь</option>
+                <option value="говоришь">говоришь</option>
+                <option value="скажешь">скажешь</option>
+            </select>
+            по-русски.
+        </div>
+        <div class="exercise-row">
+            <span class="sentence-num">5.</span>
+            Пожалуйста, 
+            <select onchange="check(this, 'расскажи')">
+                <option value="">---</option>
+                <option value="скажи">скажи</option>
+                <option value="поговори">поговори</option>
+                <option value="расскажи">расскажи</option>
+            </select>
+            мне о своей поездке в Москву.
+        </div>
+        <div class="button-group">
+            <button class="btn-reset" onclick="resetBlock('block1')">Zurücksetzen</button>
+            <button class="btn-sol" onclick="solveBlock('block1', ['разговариваю', 'сказал', 'рассказывает', 'говоришь', 'расскажи'])">Lösungen anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Übungsblock 2 -->
+    <div class="exercise-section" id="block2">
+        <div class="exercise-row">
+            <span class="sentence-num">6.</span>
+            Мы вчера долго 
+            <select onchange="check(this, 'разговаривали')">
+                <option value="">---</option>
+                <option value="сказали">сказали</option>
+                <option value="разговаривали">разговаривали</option>
+                <option value="рассказали">рассказали</option>
+            </select>
+            о политике.
+        </div>
+        <div class="exercise-row">
+            <span class="sentence-num">7.</span>
+            Учитель 
+            <select onchange="check(this, 'сказал')">
+                <option value="">---</option>
+                <option value="сказал">сказал</option>
+                <option value="рассказывал">рассказывал</option>
+                <option value="разговаривал">разговаривал</option>
+            </select>
+            нам, что завтра будет тест.
+        </div>
+        <div class="exercise-row">
+            <span class="sentence-num">8.</span>
+            Моя сестра всегда интересно 
+            <select onchange="check(this, 'рассказывает')">
+                <option value="">---</option>
+                <option value="говорит">говорит</option>
+                <option value="рассказывает">рассказывает</option>
+                <option value="скажет">скажет</option>
+            </select>
+            истории.
+        </div>
+        <div class="exercise-row">
+            <span class="sentence-num">9.</span>
+            Прекратите 
+            <select onchange="check(this, 'разговаривать')">
+                <option value="">---</option>
+                <option value="рассказывать">рассказывать</option>
+                <option value="сказать">сказать</option>
+                <option value="разговаривать">разговаривать</option>
+            </select>
+            und слушайте внимательно!
+        </div>
+        <div class="exercise-row">
+            <span class="sentence-num">10.</span>
+            Антон тихо 
+            <select onchange="check(this, 'сказал')">
+                <option value="">---</option>
+                <option value="сказал">сказал</option>
+                <option value="разговаривал">разговаривал</option>
+                <option value="рассказывал">рассказывал</option>
+            </select>
+            „Да“.
+        </div>
+        <div class="button-group">
+            <button class="btn-reset" onclick="resetBlock('block2')">Zurücksetzen</button>
+            <button class="btn-sol" onclick="solveBlock('block2', ['разговаривали', 'сказал', 'рассказывает', 'разговаривать', 'сказал'])">Lösungen anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Übungsblock 3 -->
+    <div class="exercise-section" id="block3">
+        <div class="exercise-row">
+            <span class="sentence-num">11.</span>
+            Иван 
+            <select onchange="check(this, 'сказал')">
+                <option value="">---</option>
+                <option value="рассказал">рассказал</option>
+                <option value="разговаривал">разговаривал</option>
+                <option value="сказал">сказал</option>
+            </select>
+            мне свой секрет.
+        </div>
+        <div class="exercise-row">
+            <span class="sentence-num">12.</span>
+            В детстве папа часто 
+            <select onchange="check(this, 'рассказывал')">
+                <option value="">---</option>
+                <option value="рассказывал">рассказывал</option>
+                <option value="сказал">сказал</option>
+                <option value="разговаривал">разговаривал</option>
+            </select>
+            нам о войне.
+        </div>
+        <div class="exercise-row">
+            <span class="sentence-num">13.</span>
+            Мы хотим 
+            <select onchange="check(this, 'поговорить')">
+                <option value="">---</option>
+                <option value="сказать">сказать</option>
+                <option value="поговорить">поговорить</option>
+                <option value="рассказать">рассказать</option>
+            </select>
+            с директором школы.
+        </div>
+        <div class="exercise-row">
+            <span class="sentence-num">14.</span>
+            Кто это 
+            <select onchange="check(this, 'сказал')">
+                <option value="">---</option>
+                <option value="разговаривал">разговаривал</option>
+                <option value="рассказывал">рассказывал</option>
+                <option value="сказал">сказал</option>
+            </select>
+            ? Я не слышал.
+        </div>
+        <div class="exercise-row">
+            <span class="sentence-num">15.</span>
+            Не надо так громко 
+            <select onchange="check(this, 'говорить')">
+                <option value="">---</option>
+                <option value="рассказать">рассказать</option>
+                <option value="говорить">говорить</option>
+                <option value="сказать">сказать</option>
+            </select>
+            !
+        </div>
+        <div class="button-group">
+            <button class="btn-reset" onclick="resetBlock('block3')">Zurücksetzen</button>
+            <button class="btn-sol" onclick="solveBlock('block3', ['сказал', 'рассказывал', 'поговорить', 'сказал', 'говорить'])">Lösungen anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Übungsblock 4 -->
+    <div class="exercise-section" id="block4">
+        <div class="exercise-row">
+            <span class="sentence-num">16.</span>
+            Друг 
+            <select onchange="check(this, 'рассказал')">
+                <option value="">---</option>
+                <option value="сказал">сказал</option>
+                <option value="разговаривал">разговаривал</option>
+                <option value="рассказал">рассказал</option>
+            </select>
+            мне о новом фильме.
+        </div>
+        <div class="exercise-row">
+            <span class="sentence-num">17.</span>
+            Вы уже 
+            <select onchange="check(this, 'говорили')">
+                <option value="">---</option>
+                <option value="говорили">говорили</option>
+                <option value="сказали">сказали</option>
+                <option value="разговаривали">разговаривали</option>
+            </select>
+            об этом вчера.
+        </div>
+        <div class="exercise-row">
+            <span class="sentence-num">18.</span>
+            Мама 
+            <select onchange="check(this, 'сказала')">
+                <option value="">---</option>
+                <option value="сказала">сказала</option>
+                <option value="разговаривала">разговаривала</option>
+                <option value="рассказала">рассказала</option>
+            </select>
+            , что обед готов.
+        </div>
+        <div class="exercise-row">
+            <span class="sentence-num">19.</span>
+            Мы просто сидели в кафе и 
+            <select onchange="check(this, 'разговаривали')">
+                <option value="">---</option>
+                <option value="сказали">сказали</option>
+                <option value="разговаривали">разговаривали</option>
+                <option value="рассказали">рассказали</option>
+            </select>
+            ни о чём.
+        </div>
+        <div class="exercise-row">
+            <span class="sentence-num">20.</span>
+            Лена может долго 
+            <select onchange="check(this, 'рассказывать')">
+                <option value="">---</option>
+                <option value="сказать">сказать</option>
+                <option value="рассказывать">рассказывать</option>
+                <option value="разговаривать">разговаривать</option>
+            </select>
+            о своей собаке.
+        </div>
+        <div class="button-group">
+            <button class="btn-reset" onclick="resetBlock('block4')">Zurücksetzen</button>
+            <button class="btn-sol" onclick="solveBlock('block4', ['рассказал', 'говорили', 'сказала', 'разговаривали', 'рассказывать'])">Lösungen anzeigen</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Sofortiges Feedback bei Auswahl
+    function check(el, correctValue) {
+        el.classList.remove('correct', 'incorrect');
+        if (el.value === "") return;
+        
+        if (el.value === correctValue) {
+            el.classList.add('correct');
+        } else {
+            el.classList.add('incorrect');
+        }
+    }
+
+    // Zurücksetzen eines Blocks
+    function resetBlock(blockId) {
+        const selects = document.querySelectorAll(`#${blockId} select`);
+        selects.forEach(s => {
+            s.value = "";
+            s.classList.remove('correct', 'incorrect');
+        });
+    }
+
+    // Lösungen anzeigen
+    function solveBlock(blockId, answers) {
+        const selects = document.querySelectorAll(`#${blockId} select`);
+        selects.forEach((s, index) => {
+            s.value = answers[index];
+            s.classList.remove('incorrect');
+            s.classList.add('correct');
+        });
+    }
+</script>
+
+</body>
+</html>
