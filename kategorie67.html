@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russisch-Trainer: Verben Kategorisieren</title>
+    <!-- Polyfill für Drag and Drop auf Touch-Geräten -->
+    <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-bg: #d4edda;
+            --success-border: #28a745;
+            --error-bg: #f8d7da;
+            --error-border: #dc3545;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: var(--primary-color);
+        }
+
+        .intro-box {
+            background: #eef7fd;
+            padding: 15px;
+            border-left: 6px solid var(--secondary-color);
+            margin-bottom: 25px;
+            border-radius: 4px;
+        }
+
+        /* Karten-Quelle */
+        .source-container {
+            background: #fff;
+            border: 2px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            min-height: 100px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .phrase-card {
+            padding: 10px 15px;
+            background: var(--secondary-color);
+            color: white;
+            border-radius: 6px;
+            cursor: grab;
+            user-select: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .phrase-card:active { cursor: grabbing; }
+
+        /* Kategorien-Layout */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .category-box {
+            background: #fff;
+            border: 2px dashed #bbb;
+            border-radius: 8px;
+            min-height: 250px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .category-box h3 {
+            font-size: 0.9em;
+            text-align: center;
+            margin: 0 0 10px 0;
+            color: var(--primary-color);
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .category-box.drag-over {
+            background: #f0f8ff;
+            border-color: var(--secondary-color);
+        }
+
+        /* Status-Farben nach Drop */
+        .phrase-card.correct {
+            background-color: var(--success-bg) !important;
+            border: 1px solid var(--success-border);
+            color: #155724 !important;
+        }
+
+        .phrase-card.incorrect {
+            background-color: var(--error-bg) !important;
+            border: 1px solid var(--error-border);
+            color: #721c24 !important;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+
+        .btn-reset { background-color: #95a5a6; color: white; }
+        .btn-sol { background-color: #f39c12; color: white; }
+        button:hover { opacity: 0.9; }
+
+        @media (max-width: 768px) {
+            .categories-grid { grid-template-columns: 1fr; }
+            .category-box { min-height: 150px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Russisch-Trainer: Drag & Drop</h1>
+    <h2>Kontextuelle Sortierung</h2>
+
+    <div class="intro-box">
+        <strong>Aufgabe:</strong> Ziehen Sie die Ausdrücke in die richtige Box, basierend auf der Art der Kommunikation. Feedback erfolgt sofort beim Ablegen.
+    </div>
+
+    <!-- Quelle der Sätze -->
+    <div id="source" class="source-container" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <!-- Kategorien: A (Einseitig), B (Dialog), C (Erzählung) -->
+        <div class="phrase-card" draggable="true" ondragstart="drag(event)" id="p1" data-cat="A">Сказать „Привет“</div>
+        <div class="phrase-card" draggable="true" ondragstart="drag(event)" id="p2" data-cat="B">Разговаривать по телефону</div>
+        <div class="phrase-card" draggable="true" ondragstart="drag(event)" id="p3" data-cat="C">Рассказать сказку</div>
+        <div class="phrase-card" draggable="true" ondragstart="drag(event)" id="p4" data-cat="A">Сказать время</div>
+        <div class="phrase-card" draggable="true" ondragstart="drag(event)" id="p5" data-cat="B">Говорить с другом в кафе</div>
+        <div class="phrase-card" draggable="true" ondragstart="drag(event)" id="p6" data-cat="C">Рассказать о поездке</div>
+        <div class="phrase-card" draggable="true" ondragstart="drag(event)" id="p7" data-cat="A">Сказать правду</div>
+        <div class="phrase-card" draggable="true" ondragstart="drag(event)" id="p8" data-cat="B">Поговорить с учителем</div>
+        <div class="phrase-card" draggable="true" ondragstart="drag(event)" id="p9" data-cat="C">Рассказать историю</div>
+        <div class="phrase-card" draggable="true" ondragstart="drag(event)" id="p10" data-cat="A">Сказать „Да“</div>
+    </div>
+
+    <!-- Ziel-Boxen -->
+    <div class="categories-grid">
+        <div id="cat-A" class="category-box" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)">
+            <h3>Einseitige Information<br>(Sagen / Mitteilen)</h3>
+        </div>
+        <div id="cat-B" class="category-box" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)">
+            <h3>Dialog / Austausch<br>(Sich unterhalten)</h3>
+        </div>
+        <div id="cat-C" class="category-box" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)">
+            <h3>Längere Erzählung<br>(Erzählen / Berichten)</h3>
+        </div>
+    </div>
+
+    <div class="button-group">
+        <button class="btn-reset" onclick="resetGame()">Zurücksetzen</button>
+        <button class="btn-sol" onclick="showSolution()">Lösungen anzeigen</button>
+    </div>
+</div>
+
+<script>
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
+
+    function drag(ev) {
+        ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    function dragEnter(ev) {
+        if (ev.target.classList.contains('category-box')) {
+            ev.target.classList.add('drag-over');
+        }
+    }
+
+    function dragLeave(ev) {
+        if (ev.target.classList.contains('category-box')) {
+            ev.target.classList.remove('drag-over');
+        }
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+        let target = ev.target;
+        
+        // Sicherstellen, dass wir auf die Box droppen, nicht auf eine Karte darin
+        while (target && !target.classList.contains('category-box') && target.id !== 'source') {
+            target = target.parentElement;
+        }
+
+        if (!target) return;
+        target.classList.remove('drag-over');
+
+        const data = ev.dataTransfer.getData("text");
+        const card = document.getElementById(data);
+        target.appendChild(card);
+
+        // Feedback geben
+        if (target.id === 'source') {
+            card.classList.remove('correct', 'incorrect');
+        } else {
+            const correctCat = "cat-" + card.getAttribute('data-cat');
+            if (target.id === correctCat) {
+                card.classList.add('correct');
+                card.classList.remove('incorrect');
+            } else {
+                card.classList.add('incorrect');
+                card.classList.remove('correct');
+            }
+        }
+    }
+
+    function resetGame() {
+        const source = document.getElementById('source');
+        const cards = document.querySelectorAll('.phrase-card');
+        cards.forEach(card => {
+            card.classList.remove('correct', 'incorrect');
+            source.appendChild(card);
+        });
+        
+        // Zufälliges Mischen der Karten im Quellcontainer
+        for (let i = source.children.length; i >= 0; i--) {
+            source.appendChild(source.children[Math.random() * i | 0]);
+        }
+    }
+
+    function showSolution() {
+        const cards = document.querySelectorAll('.phrase-card');
+        cards.forEach(card => {
+            const correctCatId = "cat-" + card.getAttribute('data-cat');
+            const targetBox = document.getElementById(correctCatId);
+            card.classList.remove('incorrect');
+            card.classList.add('correct');
+            targetBox.appendChild(card);
+        });
+    }
+
+    // Beim Start einmal mischen
+    window.onload = resetGame;
+</script>
+
+</body>
+</html>
