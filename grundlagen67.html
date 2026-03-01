@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interaktive Russische Grammatik: Verben des Sprechens</title>
+    <!-- Polyfill für Drag and Drop auf Touch-Geräten -->
+    <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-bg: #d4edda;
+            --success-border: #28a745;
+            --error-bg: #f8d7da;
+            --error-border: #dc3545;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+
+        .intro {
+            background: #eef2f3;
+            padding: 20px;
+            border-left: 6px solid var(--secondary-color);
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        h3 {
+            margin-top: 40px;
+            color: var(--secondary-color);
+            border-bottom: 1px solid #ddd;
+        }
+
+        .exercise-block {
+            margin-bottom: 25px;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        .button-group {
+            margin-top: 15px;
+            display: flex;
+            gap: 12px;
+        }
+
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+
+        .btn-reset { background-color: #95a5a6; color: white; }
+        .btn-sol { background-color: #f39c12; color: white; }
+        button:hover { opacity: 0.9; }
+
+        select, .dropzone {
+            padding: 6px 10px;
+            margin: 0 5px;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            font-size: 1em;
+            background: white;
+            transition: all 0.2s;
+        }
+
+        /* Status-Farben */
+        .correct { background-color: var(--success-bg) !important; border-color: var(--success-border) !important; }
+        .incorrect { background-color: var(--error-bg) !important; border-color: var(--error-border) !important; }
+
+        .radio-item {
+            display: block;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+        .radio-item:hover { background-color: #f1f1f1; }
+        .radio-item.correct { background-color: var(--success-bg); border-color: var(--success-border); }
+        .radio-item.incorrect { background-color: var(--error-bg); border-color: var(--error-border); }
+
+        .drag-source {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .draggable {
+            padding: 8px 15px;
+            background: var(--secondary-color);
+            color: white;
+            border-radius: 6px;
+            cursor: move;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .dropzone {
+            display: inline-block;
+            min-width: 130px;
+            min-height: 30px;
+            vertical-align: middle;
+            text-align: center;
+            border: 2px dashed #aaa;
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 20px; }
+            .button-group { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Russische Grammatik</h1>
+    <h2>ГОВОРИТЬ, СКАЗАТЬ, РАЗГОВАРИВАТЬ und РАССКАЗЫВАТЬ</h2>
+
+    <div class="intro">
+        <p><strong>ГОВОРИТЬ / СКАЗАТЬ:</strong> Mitteilung einer Information (kurz, oft einseitig).<br>
+        <strong>ГОВОРИТЬ С КЕМ / РАЗГОВАРИВАТЬ:</strong> Dialog oder Unterhaltung (zweiseitiger Prozess).<br>
+        <strong>РАССКАЗЫВАТЬ / РАССКАЗАТЬ:</strong> Ausführliches Berichten oder Erzählen (Geschichte, Erlebnisse).</p>
+    </div>
+
+    <!-- Teil 1: Radio Buttons (Gemischt) -->
+    <h3>Teil 1: Wählen Sie das passende Verb</h3>
+    
+    <div class="exercise-block" id="ex1">
+        <p>1. Он хочет ... мне секрет.</p>
+        <label class="radio-item"><input type="radio" name="q1" value="РАЗГОВАРИВАТЬ" onchange="checkRadio(this, 'СКАЗАТЬ')"> РАЗГОВАРИВАТЬ</label>
+        <label class="radio-item"><input type="radio" name="q1" value="СКАЗАТЬ" onchange="checkRadio(this, 'СКАЗАТЬ')"> СКАЗАТЬ</label>
+        <div class="button-group">
+            <button class="btn-reset" onclick="resetRadio('ex1')">Zurücksetzen</button>
+            <button class="btn-sol" onclick="solRadio('ex1', 'СКАЗАТЬ')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <div class="exercise-block" id="ex2">
+        <p>2. Мы долго ... о политике.</p>
+        <label class="radio-item"><input type="radio" name="q2" value="РАЗГОВАРИВАЛИ" onchange="checkRadio(this, 'РАЗГОВАРИВАЛИ')"> РАЗГОВАРИВАЛИ</label>
+        <label class="radio-item"><input type="radio" name="q2" value="СКАЗАЛИ" onchange="checkRadio(this, 'РАЗГОВАРИВАЛИ')"> СКАЗАЛИ</label>
+        <div class="button-group">
+            <button class="btn-reset" onclick="resetRadio('ex2')">Zurücksetzen</button>
+            <button class="btn-sol" onclick="solRadio('ex2', 'РАЗГОВАРИВАЛИ')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <div class="exercise-block" id="ex3">
+        <p>3. Пожалуйста, ... правду.</p>
+        <label class="radio-item"><input type="radio" name="q3" value="РАЗГОВАРИВАЙТЕ" onchange="checkRadio(this, 'ГОВОРИТЕ')"> РАЗГОВАРИВАЙТЕ</label>
+        <label class="radio-item"><input type="radio" name="q3" value="ГОВОРИТЕ" onchange="checkRadio(this, 'ГОВОРИТЕ')"> ГОВОРИТЕ</label>
+        <div class="button-group">
+            <button class="btn-reset" onclick="resetRadio('ex3')">Zurücksetzen</button>
+            <button class="btn-sol" onclick="solRadio('ex3', 'ГОВОРИТЕ')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <div class="exercise-block" id="ex4">
+        <p>4. Вчера я ... другу о поездке.</p>
+        <label class="radio-item"><input type="radio" name="q4" value="СКАЗАЛ" onchange="checkRadio(this, 'РАССКАЗАЛ')"> СКАЗАЛ</label>
+        <label class="radio-item"><input type="radio" name="q4" value="РАССКАЗАЛ" onchange="checkRadio(this, 'РАССКАЗАЛ')"> РАССКАЗАЛ</label>
+        <div class="button-group">
+            <button class="btn-reset" onclick="resetRadio('ex4')">Zurücksetzen</button>
+            <button class="btn-sol" onclick="solRadio('ex4', 'РАССКАЗАЛ')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <div class="exercise-block" id="ex5">
+        <p>5. Мама часто ... нам сказки.</p>
+        <label class="radio-item"><input type="radio" name="q5" value="РАССКАЗЫВАЕТ" onchange="checkRadio(this, 'РАССКАЗЫВАЕТ')"> РАССКАЗЫВАЕТ</label>
+        <label class="radio-item"><input type="radio" name="q5" value="ГОВОРИТ" onchange="checkRadio(this, 'РАССКАЗЫВАЕТ')"> ГОВОРИТ</label>
+        <div class="button-group">
+            <button class="btn-reset" onclick="resetRadio('ex5')">Zurücksetzen</button>
+            <button class="btn-sol" onclick="solRadio('ex5', 'РАССКАЗЫВАЕТ')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Teil 2: Dropdowns (Gemischt) -->
+    <h3>Teil 2: Wählen Sie aus der Liste</h3>
+    <div class="exercise-block" id="block2">
+        <p>6. Я хочу <select onchange="checkSel(this, 'ПОГОВОРИТЬ')"><option value="">---</option><option value="СКАЗАТЬ">СКАЗАТЬ</option><option value="ПОГОВОРИТЬ">ПОГОВОРИТЬ</option></select> с тобой.</p>
+        <p>7. Ты можешь <select onchange="checkSel(this, 'СКАЗАТЬ')"><option value="">---</option><option value="РАЗГОВАРИВАТЬ">РАЗГОВАРИВАТЬ</option><option value="СКАЗАТЬ">СКАЗАТЬ</option></select> мне время?</p>
+        <p>8. Иван хорошо <select onchange="checkSel(this, 'ГОВОРИТ')"><option value="">---</option><option value="ГОВОРИТ">ГОВОРИТ</option><option value="РАССКАЗЫВАЕТ">РАССКАЗЫВАЕТ</option></select> по-русски.</p>
+        <p>9. Перестаньте <select onchange="checkSel(this, 'РАЗГОВАРИВАТЬ')"><option value="">---</option><option value="СКАЗАТЬ">СКАЗАТЬ</option><option value="РАЗГОВАРИВАТЬ">РАЗГОВАРИВАТЬ</option></select> на уроке!</p>
+        <p>10. Она <select onchange="checkSel(this, 'РАССКАЗАЛА')"><option value="">---</option><option value="РАССКАЗАЛА">РАССКАЗАЛА</option><option value="ПОГОВОРИЛА">ПОГОВОРИЛА</option></select> нам историю.</p>
+        <div class="button-group">
+            <button class="btn-reset" onclick="resetBlock('block2')">Zurücksetzen</button>
+            <button class="btn-sol" onclick="solDrop('block2', ['ПОГОВОРИТЬ', 'СКАЗАТЬ', 'ГОВОРИТ', 'РАЗГОВАРИВАТЬ', 'РАССКАЗАЛА'])">Lösungen anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Teil 3: Drag and Drop -->
+    <h3>Teil 3: Verben richtig zuordnen</h3>
+    <div class="exercise-block" id="block3">
+        <div class="drag-source">
+            <div class="draggable" draggable="true" ondragstart="drag(event)" id="d1">СКАЗАЛ</div>
+            <div class="draggable" draggable="true" ondragstart="drag(event)" id="d2">ГОВОРИТЬ</div>
+            <div class="draggable" draggable="true" ondragstart="drag(event)" id="d3">РАССКАЖИ</div>
+            <div class="draggable" draggable="true" ondragstart="drag(event)" id="d4">РАЗГОВАРИВАЛИ</div>
+            <div class="draggable" draggable="true" ondragstart="drag(event)" id="d5">ГОВОРИТ</div>
+        </div>
+        <p>11. Кто это <span class="dropzone" ondrop="drop(event, 'СКАЗАЛ')" ondragover="allowDrop(event)"></span>?</p>
+        <p>12. Мой брат быстро <span class="dropzone" ondrop="drop(event, 'ГОВОРИТ')" ondragover="allowDrop(event)"></span>.</p>
+        <p>13. Пожалуйста, <span class="dropzone" ondrop="drop(event, 'РАССКАЖИ')" ondragover="allowDrop(event)"></span> нам о фильме.</p>
+        <p>14. Они долго <span class="dropzone" ondrop="drop(event, 'РАЗГОВАРИВАЛИ')" ondragover="allowDrop(event)"></span> в кафе.</p>
+        <p>15. Трудно <span class="dropzone" ondrop="drop(event, 'ГОВОРИТЬ')" ondragover="allowDrop(event)"></span> без ошибок.</p>
+        <div class="button-group">
+            <button class="btn-reset" onclick="resetBlock('block3')">Zurücksetzen</button>
+            <button class="btn-sol" onclick="solDrag('block3', ['СКАЗАЛ', 'ГОВОРИТ', 'РАССКАЖИ', 'РАЗГОВАРИВАЛИ', 'ГОВОРИТЬ'])">Lösungen anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Teil 4: Bedeutungskontext (Dropdowns) -->
+    <h3>Teil 4: Welches Verb passt zum Kontext?</h3>
+    <div class="exercise-block" id="block4">
+        <p>16. Ein kurzes „Да“ oder „Нет“ mitteilen: 
+            <select onchange="checkSel(this, 'СКАЗАТЬ')"><option value="">---</option><option value="СКАЗАТЬ">СКАЗАТЬ</option><option value="РАССКАЗАТЬ">РАССКАЗАТЬ</option><option value="РАЗГОВАРИВАТЬ">РАЗГОВАРИВАТЬ</option></select>
+        </p>
+        <p>17. Ein langes Interview mit Dialog führen: 
+            <select onchange="checkSel(this, 'РАЗГОВАРИВАТЬ')"><option value="">---</option><option value="СКАЗАТЬ">СКАЗАТЬ</option><option value="РАССКАЗАТЬ">РАССКАЗАТЬ</option><option value="РАЗГОВАРИВАТЬ">РАЗГОВАРИВАТЬ</option></select>
+        </p>
+        <p>18. Den Inhalt eines ganzen Buches wiedergeben: 
+            <select onchange="checkSel(this, 'РАССКАЗЫВАТЬ')"><option value="">---</option><option value="ГОВОРИТЬ">ГОВОРИТЬ</option><option value="РАССКАЗЫВАТЬ">РАССКАЗЫВАТЬ</option><option value="РАЗГОВАРИВАТЬ">РАЗГОВАРИВАТЬ</option></select>
+        </p>
+        <p>19. Die allgemeine Fähigkeit, Russisch zu sprechen: 
+            <select onchange="checkSel(this, 'ГОВОРИТЬ')"><option value="">---</option><option value="ГОВОРИТЬ">ГОВОРИТЬ</option><option value="РАССКАЗЫВАТЬ">РАССКАЗЫВАТЬ</option><option value="СКАЗАТЬ">СКАЗАТЬ</option></select>
+        </p>
+        <p>20. Eine Nachricht kurz an jemanden richten: 
+            <select onchange="checkSel(this, 'СКАЗАТЬ')"><option value="">---</option><option value="РАЗГОВАРИВАТЬ">РАЗГОВАРИВАТЬ</option><option value="СКАЗАТЬ">СКАЗАТЬ</option><option value="РАССКАЗЫВАТЬ">РАССКАЗЫВАТЬ</option></select>
+        </p>
+        <div class="button-group">
+            <button class="btn-reset" onclick="resetBlock('block4')">Zurücksetzen</button>
+            <button class="btn-sol" onclick="solDrop('block4', ['СКАЗАТЬ', 'РАЗГОВАРИВАТЬ', 'РАССКАЗЫВАТЬ', 'ГОВОРИТЬ', 'СКАЗАТЬ'])">Lösungen anzeigen</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Radio Buttons Feedback
+    function checkRadio(el, correct) {
+        const parent = el.closest('.exercise-block');
+        parent.querySelectorAll('.radio-item').forEach(label => {
+            label.classList.remove('correct', 'incorrect');
+            const input = label.querySelector('input');
+            if(input.checked) {
+                label.classList.add(input.value === correct ? 'correct' : 'incorrect');
+            }
+        });
+    }
+
+    function resetRadio(id) {
+        const parent = document.getElementById(id);
+        parent.querySelectorAll('input').forEach(i => i.checked = false);
+        parent.querySelectorAll('.radio-item').forEach(l => l.classList.remove('correct', 'incorrect'));
+    }
+
+    function solRadio(id, correct) {
+        const parent = document.getElementById(id);
+        parent.querySelectorAll('.radio-item').forEach(label => {
+            const input = label.querySelector('input');
+            label.classList.remove('incorrect');
+            if(input.value === correct) {
+                input.checked = true;
+                label.classList.add('correct');
+            }
+        });
+    }
+
+    // Select Feedback
+    function checkSel(el, correct) {
+        el.classList.remove('correct', 'incorrect');
+        if(el.value === "") return;
+        el.classList.add(el.value === correct ? 'correct' : 'incorrect');
+    }
+
+    // Drag & Drop
+    function allowDrop(ev) { ev.preventDefault(); }
+    function drag(ev) { ev.dataTransfer.setData("text", ev.target.innerText); }
+    function drop(ev, correct) {
+        ev.preventDefault();
+        const data = ev.dataTransfer.getData("text");
+        ev.target.innerText = data;
+        ev.target.classList.remove('correct', 'incorrect');
+        ev.target.classList.add(data === correct ? 'correct' : 'incorrect');
+    }
+
+    // Block Reset (Selects, DragDrop)
+    function resetBlock(id) {
+        const parent = document.getElementById(id);
+        parent.querySelectorAll('select').forEach(s => { 
+            s.value = ""; 
+            s.classList.remove('correct', 'incorrect'); 
+        });
+        parent.querySelectorAll('.dropzone').forEach(d => { 
+            d.innerText = ""; 
+            d.classList.remove('correct', 'incorrect'); 
+        });
+    }
+
+    // Solution Injection
+    function solDrop(id, ansArr) {
+        const selects = document.getElementById(id).querySelectorAll('select');
+        selects.forEach((s, i) => { 
+            s.value = ansArr[i]; 
+            s.classList.add('correct'); 
+            s.classList.remove('incorrect'); 
+        });
+    }
+
+    function solDrag(id, ansArr) {
+        const zones = document.getElementById(id).querySelectorAll('.dropzone');
+        zones.forEach((z, i) => { 
+            z.innerText = ansArr[i]; 
+            z.classList.add('correct'); 
+            z.classList.remove('incorrect'); 
+        });
+    }
+</script>
+
+</body>
+</html>
