@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russisch-Trainer: 15 Aspekt-Paare</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --nsv-color: #3498db;
+            --sv-color: #9b59b6;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.4;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+        }
+
+        h1, h2 { text-align: center; margin: 5px 0; }
+        h1 { font-size: 1.4em; }
+        h2 { font-size: 1em; color: var(--nsv-color); margin-bottom: 15px; }
+
+        .intro-box {
+            background: #eef7fd;
+            padding: 12px;
+            border-left: 5px solid var(--nsv-color);
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+
+        .matching-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .column-header {
+            text-align: center;
+            font-weight: bold;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #eee;
+            font-size: 0.9em;
+        }
+
+        .verb-btn {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            background: #fff;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.9em;
+            transition: all 0.2s;
+            text-align: center;
+            user-select: none;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Hover & Auswahl */
+        .left .verb-btn:hover:not(.matched) { border-color: var(--nsv-color); background: #ebf5fb; }
+        .right .verb-btn:hover:not(.matched) { border-color: var(--sv-color); background: #f5eef8; }
+
+        .selected-nsv { background: var(--nsv-color) !important; color: white; border-color: var(--nsv-color); }
+        .error { background: #e74c3c !important; color: white; border-color: #e74c3c; }
+
+        /* Matched Status */
+        .matched {
+            cursor: default;
+            font-weight: bold;
+            border-style: solid;
+        }
+
+        /* 15 Farben für die Paare in der Lösung */
+        .p0 { background-color: #FFEBEE; border-color: #FFCDD2; }
+        .p1 { background-color: #E3F2FD; border-color: #BBDEFB; }
+        .p2 { background-color: #F1F8E9; border-color: #DCEDC8; }
+        .p3 { background-color: #FFF3E0; border-color: #FFE0B2; }
+        .p4 { background-color: #F3E5F5; border-color: #E1BEE7; }
+        .p5 { background-color: #E0F2F1; border-color: #B2DFDB; }
+        .p6 { background-color: #FFFDE7; border-color: #FFF9C4; }
+        .p7 { background-color: #FBE9E7; border-color: #FFCCBC; }
+        .p8 { background-color: #E8EAF6; border-color: #C5CAE9; }
+        .p9 { background-color: #EFEBE9; border-color: #D7CCC8; }
+        .p10 { background-color: #E0F7FA; border-color: #B2EBF2; }
+        .p11 { background-color: #F9FBE7; border-color: #F0F4C3; }
+        .p12 { background-color: #FFF8E1; border-color: #FFECB3; }
+        .p13 { background-color: #E8F5E9; border-color: #C8E6C9; }
+        .p14 { background-color: #FAFAFA; border-color: #F5F5F5; }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button.action-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            transition: opacity 0.2s;
+        }
+
+        .btn-reset { background-color: #95a5a6; }
+        .btn-sol { background-color: #f39c12; }
+        button:hover { opacity: 0.9; }
+
+        @media (max-width: 600px) {
+            .matching-grid { gap: 8px; }
+            .verb-btn { font-size: 0.8em; padding: 8px 4px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Russisch-Trainer: 15 Aspekt-Paare</h1>
+    <h2>НСВ (uv.) ↔ СВ (v.)</h2>
+
+    <div class="intro-box">
+        <strong>Anleitung:</strong> Klicken Sie links auf ein unvollendetes Verb (НСВ) und dann rechts auf den passenden Partner im vollendeten Aspekt (СВ). Bei der Lösungsanzeige werden zusammengehörige Paare farblich markiert.
+    </div>
+
+    <div class="matching-grid">
+        <div class="column left" id="nsv-col">
+            <div class="column-header">НСВ (uv.)</div>
+            <!-- Wird per JS befüllt -->
+        </div>
+
+        <div class="column right" id="sv-col">
+            <div class="column-header">СВ (v.)</div>
+            <!-- Wird per JS befüllt -->
+        </div>
+    </div>
+
+    <div class="button-group">
+        <button class="action-btn btn-reset" onclick="initGame()">Zurücksetzen</button>
+        <button class="action-btn btn-sol" onclick="showSolution()">Lösungen anzeigen</button>
+    </div>
+</div>
+
+<script>
+    const verbData = [
+        { nsv: "ГОВОРИТЬ", sv: "СКАЗАТЬ" },
+        { nsv: "РАССКАЗЫВАТЬ", sv: "РАССКАЗАТЬ" },
+        { nsv: "РАЗГОВАРИВАТЬ", sv: "ПОРАЗГОВАРИВАТЬ" },
+        { nsv: "ОТВЕЧАТЬ", sv: "ОТВЕТИТЬ" },
+        { nsv: "СПРАШИВАТЬ", sv: "СПРОСИТЬ" },
+        { nsv: "СООБЩАТЬ", sv: "СООБЩИТЬ" },
+        { nsv: "ПИСАТЬ", sv: "НАПИСАТЬ" },
+        { nsv: "ЧИТАТЬ", sv: "ПРОЧИТАТЬ" },
+        { nsv: "ЗВОНИТЬ", sv: "ПОЗВОНИТЬ" },
+        { nsv: "ОБЪЯСНЯТЬ", sv: "ОБЪЯСНИТЬ" },
+        { nsv: "ПОВТОРЯТЬ", sv: "ПОВТОРИТЬ" },
+        { nsv: "ОБЕЩАТЬ", sv: "ПООБЕЩАТЬ" },
+        { nsv: "ПРЕДЛАГАТЬ", sv: "ПРЕДЛОЖИТЬ" },
+        { nsv: "СОВЕТОВАТЬ", sv: "ПОСОВЕТОВАТЬ" },
+        { nsv: "ПЕРЕДАВАТЬ", sv: "ПЕРЕДАТЬ" }
+    ];
+
+    let selectedNSV = null;
+
+    function initGame() {
+        selectedNSV = null;
+        const nsvCol = document.getElementById('nsv-col');
+        const svCol = document.getElementById('sv-col');
+
+        // Header erhalten
+        nsvCol.innerHTML = '<div class="column-header">НСВ (uv.)</div>';
+        svCol.innerHTML = '<div class="column-header">СВ (v.)</div>';
+
+        // Listen mischen
+        const nsvList = [...verbData].sort(() => Math.random() - 0.5);
+        const svList = [...verbData].sort(() => Math.random() - 0.5);
+
+        nsvList.forEach((pair, index) => {
+            const btn = document.createElement('div');
+            btn.className = 'verb-btn';
+            btn.innerText = pair.nsv;
+            btn.dataset.id = pair.nsv; // ID ist hier der Text selbst (eindeutig)
+            btn.onclick = () => selectNSV(btn);
+            nsvCol.appendChild(btn);
+        });
+
+        svList.forEach((pair, index) => {
+            const btn = document.createElement('div');
+            btn.className = 'verb-btn';
+            btn.innerText = pair.sv;
+            btn.dataset.partner = pair.nsv; // Der Partner-Key (NSV)
+            btn.onclick = () => selectSV(btn);
+            svCol.appendChild(btn);
+        });
+    }
+
+    function selectNSV(btn) {
+        if (btn.classList.contains('matched')) return;
+        
+        document.querySelectorAll('.left .verb-btn').forEach(b => b.classList.remove('selected-nsv'));
+        selectedNSV = btn;
+        btn.classList.add('selected-nsv');
+    }
+
+    function selectSV(svBtn) {
+        if (svBtn.classList.contains('matched') || !selectedNSV) return;
+
+        if (svBtn.dataset.partner === selectedNSV.dataset.id) {
+            // Treffer
+            const pairIndex = verbData.findIndex(p => p.nsv === selectedNSV.dataset.id);
+            const colorClass = 'p' + pairIndex;
+            
+            selectedNSV.classList.add('matched', colorClass);
+            svBtn.classList.add('matched', colorClass);
+            
+            selectedNSV.classList.remove('selected-nsv');
+            selectedNSV = null;
+        } else {
+            // Fehler
+            svBtn.classList.add('error');
+            setTimeout(() => svBtn.classList.remove('error'), 500);
+        }
+    }
+
+    function showSolution() {
+        resetStyles();
+        const nsvBtns = document.querySelectorAll('.left .verb-btn');
+        const svBtns = document.querySelectorAll('.right .verb-btn');
+
+        verbData.forEach((pair, index) => {
+            const colorClass = 'p' + index;
+            
+            nsvBtns.forEach(btn => {
+                if (btn.innerText === pair.nsv) {
+                    btn.classList.add('matched', colorClass);
+                }
+            });
+
+            svBtns.forEach(btn => {
+                if (btn.innerText === pair.sv) {
+                    btn.classList.add('matched', colorClass);
+                }
+            });
+        });
+    }
+
+    function resetStyles() {
+        document.querySelectorAll('.verb-btn').forEach(btn => {
+            btn.className = 'verb-btn';
+        });
+        selectedNSV = null;
+    }
+
+    // Spiel beim Start initialisieren
+    window.onload = initGame;
+</script>
+
+</body>
+</html>
