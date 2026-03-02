@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russisch-Trainer: Präpositionen & Kasus</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-bg: #d4edda;
+            --success-border: #28a745;
+            --error-bg: #f8d7da;
+            --error-border: #dc3545;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: var(--primary-color);
+        }
+
+        .intro-box {
+            background: #eef7fd;
+            padding: 20px;
+            border-left: 6px solid var(--secondary-color);
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        .exercise-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .exercise-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fff;
+            padding: 12px 15px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .verb-context {
+            flex: 1;
+            min-width: 250px;
+            font-weight: 500;
+        }
+
+        .verb-context span {
+            color: var(--secondary-color);
+            font-weight: bold;
+        }
+
+        select {
+            padding: 8px;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            background-color: white;
+            cursor: pointer;
+            min-width: 220px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        /* Status Farben */
+        .correct {
+            background-color: var(--success-bg) !important;
+            border-color: var(--success-border) !important;
+        }
+
+        .incorrect {
+            background-color: var(--error-bg) !important;
+            border-color: var(--error-border) !important;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            font-size: 1em;
+            transition: opacity 0.2s;
+        }
+
+        .btn-reset { background-color: #95a5a6; }
+        .btn-sol { background-color: #f39c12; }
+        button:hover { opacity: 0.9; }
+
+        @media (max-width: 600px) {
+            .exercise-row { flex-direction: column; align-items: flex-start; }
+            select { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Russisch-Trainer: Rektion</h1>
+    <h2>Präpositionen & Kasus-Zuordnung</h2>
+
+    <div class="intro-box">
+        <strong>Aufgabe:</strong> Welcher Kasus oder welche Präposition folgt auf das Verb? Wählen Sie die korrekte grammatikalische Verbindung für den jeweiligen Kontext aus.
+    </div>
+
+    <div class="exercise-grid" id="exercise-grid">
+        <!-- Aufgabe 1 -->
+        <div class="exercise-row">
+            <div class="verb-context">1. <span>СКАЗАТЬ</span> ... (ihm/ihr)</div>
+            <select onchange="check(this, 'dativ')">
+                <option value="">-- Anschluss wählen --</option>
+                <option value="dativ">Кому? (Dativ)</option>
+                <option value="akk">Что? (Akkusativ)</option>
+                <option value="instr">С кем? (с + Instrumental)</option>
+                <option value="prep">О чём? (о + Präpositional)</option>
+            </select>
+        </div>
+
+        <!-- Aufgabe 2 -->
+        <div class="exercise-row">
+            <div class="verb-context">2. <span>РАЗГОВАРИВАТЬ</span> ... (mit dem Freund)</div>
+            <select onchange="check(this, 'instr')">
+                <option value="">-- Anschluss wählen --</option>
+                <option value="dativ">Кому? (Dativ)</option>
+                <option value="akk">Что? (Akkusativ)</option>
+                <option value="instr">С кем? (с + Instrumental)</option>
+                <option value="prep">О чём? (о + Präpositional)</option>
+            </select>
+        </div>
+
+        <!-- Aufgabe 3 -->
+        <div class="exercise-row">
+            <div class="verb-context">3. <span>РАССКАЗАТЬ</span> ... (eine Geschichte)</div>
+            <select onchange="check(this, 'akk')">
+                <option value="">-- Anschluss wählen --</option>
+                <option value="dativ">Кому? (Dativ)</option>
+                <option value="akk">Что? (Akkusativ)</option>
+                <option value="instr">С кем? (с + Instrumental)</option>
+                <option value="prep">О чём? (о + Präpositional)</option>
+            </select>
+        </div>
+
+        <!-- Aufgabe 4 -->
+        <div class="exercise-row">
+            <div class="verb-context">4. <span>ГОВОРИТЬ</span> ... (über das Wetter)</div>
+            <select onchange="check(this, 'prep')">
+                <option value="">-- Anschluss wählen --</option>
+                <option value="dativ">Кому? (Dativ)</option>
+                <option value="akk">Что? (Akkusativ)</option>
+                <option value="instr">С кем? (с + Instrumental)</option>
+                <option value="prep">О чём? (о + Präpositional)</option>
+            </select>
+        </div>
+
+        <!-- Aufgabe 5 -->
+        <div class="exercise-row">
+            <div class="verb-context">5. <span>ПОГОВОРИТЬ</span> ... (mit der Mutter)</div>
+            <select onchange="check(this, 'instr')">
+                <option value="">-- Anschluss wählen --</option>
+                <option value="dativ">Кому? (Dativ)</option>
+                <option value="akk">Что? (Akkusativ)</option>
+                <option value="instr">С кем? (с + Instrumental)</option>
+                <option value="prep">О чём? (о + Präpositional)</option>
+            </select>
+        </div>
+
+        <!-- Aufgabe 6 -->
+        <div class="exercise-row">
+            <div class="verb-context">6. <span>СКАЗАТЬ</span> ... (die Wahrheit)</div>
+            <select onchange="check(this, 'akk')">
+                <option value="">-- Anschluss wählen --</option>
+                <option value="dativ">Кому? (Dativ)</option>
+                <option value="akk">Что? (Akkusativ)</option>
+                <option value="instr">С кем? (с + Instrumental)</option>
+                <option value="prep">О чём? (о + Präpositional)</option>
+            </select>
+        </div>
+
+        <!-- Aufgabe 7 -->
+        <div class="exercise-row">
+            <div class="verb-context">7. <span>РАССКАЗЫВАТЬ</span> ... (den Kindern)</div>
+            <select onchange="check(this, 'dativ')">
+                <option value="">-- Anschluss wählen --</option>
+                <option value="dativ">Кому? (Dativ)</option>
+                <option value="akk">Что? (Akkusativ)</option>
+                <option value="instr">С кем? (с + Instrumental)</option>
+                <option value="prep">О чём? (о + Präpositional)</option>
+            </select>
+        </div>
+
+        <!-- Aufgabe 8 -->
+        <div class="exercise-row">
+            <div class="verb-context">8. <span>РАЗГОВАРИВАТЬ</span> ... (über Politik)</div>
+            <select onchange="check(this, 'prep')">
+                <option value="">-- Anschluss wählen --</option>
+                <option value="dativ">Кому? (Dativ)</option>
+                <option value="akk">Что? (Akkusativ)</option>
+                <option value="instr">С кем? (с + Instrumental)</option>
+                <option value="prep">О чём? (о + Präpositional)</option>
+            </select>
+        </div>
+
+        <!-- Aufgabe 9 -->
+        <div class="exercise-row">
+            <div class="verb-context">9. <span>ГОВОРИТЬ</span> ... (mit dem Bruder)</div>
+            <select onchange="check(this, 'instr')">
+                <option value="">-- Anschluss wählen --</option>
+                <option value="dativ">Кому? (Dativ)</option>
+                <option value="akk">Что? (Akkusativ)</option>
+                <option value="instr">С кем? (с + Instrumental)</option>
+                <option value="prep">О чём? (о + Präpositional)</option>
+            </select>
+        </div>
+
+        <!-- Aufgabe 10 -->
+        <div class="exercise-row">
+            <div class="verb-context">10. <span>СКАЗАТЬ</span> ... (eine Nachricht)</div>
+            <select onchange="check(this, 'akk')">
+                <option value="">-- Anschluss wählen --</option>
+                <option value="dativ">Кому? (Dativ)</option>
+                <option value="akk">Что? (Akkusativ)</option>
+                <option value="instr">С кем? (с + Instrumental)</option>
+                <option value="prep">О чём? (о + Präpositional)</option>
+            </select>
+        </div>
+
+        <!-- Aufgabe 11 -->
+        <div class="exercise-row">
+            <div class="verb-context">11. <span>РАССКАЗАТЬ</span> ... (vom Urlaub)</div>
+            <select onchange="check(this, 'prep')">
+                <option value="">-- Anschluss wählen --</option>
+                <option value="dativ">Кому? (Dativ)</option>
+                <option value="akk">Что? (Akkusativ)</option>
+                <option value="instr">С кем? (с + Instrumental)</option>
+                <option value="prep">О чём? (о + Präpositional)</option>
+            </select>
+        </div>
+
+        <!-- Aufgabe 12 -->
+        <div class="exercise-row">
+            <div class="verb-context">12. <span>ПОГОВОРИТЬ</span> ... (mit dem Chef)</div>
+            <select onchange="check(this, 'instr')">
+                <option value="">-- Anschluss wählen --</option>
+                <option value="dativ">Кому? (Dativ)</option>
+                <option value="akk">Что? (Akkusativ)</option>
+                <option value="instr">С кем? (с + Instrumental)</option>
+                <option value="prep">О чём? (о + Präpositional)</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="button-group">
+        <button class="btn-reset" onclick="resetAll()">Zurücksetzen</button>
+        <button class="btn-sol" onclick="showSolution()">Lösungen anzeigen</button>
+    </div>
+</div>
+
+<script>
+    function check(el, correctValue) {
+        el.classList.remove('correct', 'incorrect');
+        if (el.value === "") return;
+        
+        if (el.value === correctValue) {
+            el.classList.add('correct');
+        } else {
+            el.classList.add('incorrect');
+        }
+    }
+
+    function resetAll() {
+        const selects = document.querySelectorAll('select');
+        selects.forEach(s => {
+            s.value = "";
+            s.classList.remove('correct', 'incorrect');
+        });
+    }
+
+    function showSolution() {
+        const rows = document.querySelectorAll('.exercise-row');
+        const solutions = [
+            'dativ', 'instr', 'akk', 'prep', 'instr', 'akk', 
+            'dativ', 'prep', 'instr', 'akk', 'prep', 'instr'
+        ];
+
+        rows.forEach((row, index) => {
+            const select = row.querySelector('select');
+            select.value = solutions[index];
+            select.classList.remove('incorrect');
+            select.classList.add('correct');
+        });
+    }
+</script>
+
+</body>
+</html>
