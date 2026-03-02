@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russisch-Trainer: 10 Transformationen</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        h1, h2 { text-align: center; color: var(--primary-color); }
+        h1 { font-size: 1.6em; margin-bottom: 5px; }
+        h2 { font-size: 1.1em; color: var(--secondary-color); font-weight: normal; margin-bottom: 25px; }
+
+        .intro-box {
+            background: #eef7fd;
+            padding: 15px;
+            border-left: 5px solid var(--secondary-color);
+            margin-bottom: 30px;
+            border-radius: 4px;
+            font-size: 0.95em;
+        }
+
+        .exercise-card {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .original-sentence {
+            font-size: 1.1em;
+            background: #f1f3f5;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .original-sentence strong { color: #d35400; }
+
+        .transformation-label {
+            display: block;
+            font-size: 0.85em;
+            color: #7f8c8d;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-btn {
+            text-align: left;
+            padding: 12px 15px;
+            background-color: white;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .option-btn:hover:not(.locked) {
+            border-color: var(--secondary-color);
+            background-color: #f0f7ff;
+        }
+
+        .correct { background-color: var(--success-color) !important; border-color: #219150 !important; color: white !important; }
+        .incorrect { background-color: var(--error-color) !important; border-color: #c0392b !important; color: white !important; }
+        .locked { cursor: default; }
+
+        .footer-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            padding-bottom: 20px;
+        }
+
+        .action-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+        }
+
+        .btn-reset { background-color: #95a5a6; }
+        .btn-sol { background-color: #f39c12; }
+
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .option-btn { font-size: 0.9em; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Russisch-Trainer: Transformation</h1>
+    <h2>Synonyme erkennen (10 Aufgaben)</h2>
+
+    <div class="intro-box">
+        <strong>Aufgabe:</strong> Welcher der drei Sätze drückt das Gleiche aus wie der Originalsatz? Achten Sie darauf, ob es um eine kurze Info, einen Dialog oder eine lange Erzählung geht.
+    </div>
+
+    <div id="exercise-list">
+        <!-- Satz 1 -->
+        <div class="exercise-card" data-answer="1">
+            <span class="transformation-label">Original:</span>
+            <div class="original-sentence">Мы вчера долго <strong>разговаривали</strong>.</div>
+            <div class="options-list">
+                <button class="option-btn" onclick="check(this, 0)">Мы вчера долго рассказали историю.</button>
+                <button class="option-btn" onclick="check(this, 1)">Мы вчера долго говорили друг с другом.</button>
+                <button class="option-btn" onclick="check(this, 2)">Мы вчера долго сказали привет.</button>
+            </div>
+        </div>
+
+        <!-- Satz 2 -->
+        <div class="exercise-card" data-answer="2">
+            <span class="transformation-label">Original:</span>
+            <div class="original-sentence">Он <strong>рассказал</strong> мне о своей поездке.</div>
+            <div class="options-list">
+                <button class="option-btn" onclick="check(this, 0)">Он разговаривал со мной о поездке.</button>
+                <button class="option-btn" onclick="check(this, 1)">Он сказал мне время поездки.</button>
+                <button class="option-btn" onclick="check(this, 2)">Он сообщил мне подробную информацию о поездке.</button>
+            </div>
+        </div>
+
+        <!-- Satz 3 -->
+        <div class="exercise-card" data-answer="0">
+            <span class="transformation-label">Original:</span>
+            <div class="original-sentence">Я хочу <strong>поговорить</strong> с тобой.</div>
+            <div class="options-list">
+                <button class="option-btn" onclick="check(this, 0)">Я хочу пообщаться с тобой.</button>
+                <button class="option-btn" onclick="check(this, 1)">Я хочу рассказать тебе сказку.</button>
+                <button class="option-btn" onclick="check(this, 2)">Я хочу сказать тебе одно слово.</button>
+            </div>
+        </div>
+
+        <!-- Satz 4 -->
+        <div class="exercise-card" data-answer="1">
+            <span class="transformation-label">Original:</span>
+            <div class="original-sentence">Что он тебе <strong>сказал</strong>?</div>
+            <div class="options-list">
+                <button class="option-btn" onclick="check(this, 0)">О чём он с тобой разговаривал?</button>
+                <button class="option-btn" onclick="check(this, 1)">Какую информацию он тебе сообщил?</button>
+                <button class="option-btn" onclick="check(this, 2)">Какую историю он тебе рассказал?</button>
+            </div>
+        </div>
+
+        <!-- Satz 5 -->
+        <div class="exercise-card" data-answer="2">
+            <span class="transformation-label">Original:</span>
+            <div class="original-sentence">Они <strong>разговаривают</strong> уже час.</div>
+            <div class="options-list">
+                <button class="option-btn" onclick="check(this, 0)">Они рассказывают новости уже час.</button>
+                <button class="option-btn" onclick="check(this, 1)">Они говорят правду уже час.</button>
+                <button class="option-btn" onclick="check(this, 2)">Они ведут беседу уже час.</button>
+            </div>
+        </div>
+
+        <!-- Satz 6 -->
+        <div class="exercise-card" data-answer="0">
+            <span class="transformation-label">Original:</span>
+            <div class="original-sentence">Бабушка <strong>рассказывает</strong> детям сказку.</div>
+            <div class="options-list">
+                <button class="option-btn" onclick="check(this, 0)">Бабушка читает детям длинную историю.</button>
+                <button class="option-btn" onclick="check(this, 1)">Бабушка говорит детям одно слово.</button>
+                <button class="option-btn" onclick="check(this, 2)">Бабушка разговаривает с детьми по телефону.</button>
+            </div>
+        </div>
+
+        <!-- Satz 7 -->
+        <div class="exercise-card" data-answer="1">
+            <span class="transformation-label">Original:</span>
+            <div class="original-sentence">Он <strong>сказал</strong> «Привет».</div>
+            <div class="options-list">
+                <button class="option-btn" onclick="check(this, 0)">Он долго разговаривал.</button>
+                <button class="option-btn" onclick="check(this, 1)">Он поздоровался.</button>
+                <button class="option-btn" onclick="check(this, 2)">Он рассказал анекдот.</button>
+            </div>
+        </div>
+
+        <!-- Satz 8 -->
+        <div class="exercise-card" data-answer="2">
+            <span class="transformation-label">Original:</span>
+            <div class="original-sentence">Анна хорошо <strong>говорит</strong> по-русски.</div>
+            <div class="options-list">
+                <button class="option-btn" onclick="check(this, 0)">Анна рассказала всё по-русски.</button>
+                <button class="option-btn" onclick="check(this, 1)">Анна сказала фразу по-русски.</button>
+                <button class="option-btn" onclick="check(this, 2)">Анna хорошо владеет русским языком.</button>
+            </div>
+        </div>
+
+        <!-- Satz 9 -->
+        <div class="exercise-card" data-answer="0">
+            <span class="transformation-label">Original:</span>
+            <div class="original-sentence">Друг <strong>рассказал</strong> мне анекдот.</div>
+            <div class="options-list">
+                <button class="option-btn" onclick="check(this, 0)">Друг сообщил мне смешную историю.</button>
+                <button class="option-btn" onclick="check(this, 1)">Друг разговаривал со мной об анекдоте.</button>
+                <button class="option-btn" onclick="check(this, 2)">Друг сказал мне «Анекдот».</button>
+            </div>
+        </div>
+
+        <!-- Satz 10 -->
+        <div class="exercise-card" data-answer="1">
+            <span class="transformation-label">Original:</span>
+            <div class="original-sentence">Нам нужно <strong>поговорить</strong> о плане.</div>
+            <div class="options-list">
+                <button class="option-btn" onclick="check(this, 0)">Нам нужно сказать план.</button>
+                <button class="option-btn" onclick="check(this, 1)">Нам нужно обсудить план.</button>
+                <button class="option-btn" onclick="check(this, 2)">Нам нужно рассказать план за секунду.</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-controls">
+        <button class="action-btn btn-reset" onclick="reset()">Zurücksetzen</button>
+        <button class="action-btn btn-sol" onclick="sol()">Lösungen anzeigen</button>
+    </div>
+</div>
+
+<script>
+    function check(btn, idx) {
+        const card = btn.closest('.exercise-card');
+        const correct = parseInt(card.getAttribute('data-answer'));
+        const opts = card.querySelectorAll('.option-btn');
+        opts.forEach(o => o.classList.add('locked'));
+        if (idx === correct) {
+            btn.classList.add('correct');
+        } else {
+            btn.classList.add('incorrect');
+            opts[correct].classList.add('correct');
+        }
+    }
+
+    function reset() {
+        document.querySelectorAll('.option-btn').forEach(b => {
+            b.classList.remove('correct', 'incorrect', 'locked');
+        });
+    }
+
+    function sol() {
+        document.querySelectorAll('.exercise-card').forEach(card => {
+            const correct = parseInt(card.getAttribute('data-answer'));
+            const opts = card.querySelectorAll('.option-btn');
+            opts.forEach((o, i) => {
+                o.classList.add('locked');
+                o.classList.remove('correct', 'incorrect');
+                if (i === correct) o.classList.add('correct');
+            });
+        });
+    }
+</script>
+
+</body>
+</html>
