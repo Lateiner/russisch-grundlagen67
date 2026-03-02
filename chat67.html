@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russisch-Trainer: Chat-Simulator (10 Stufen)</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --chat-bg: #e5ddd5;
+            --msg-in: #ffffff;
+            --msg-out: #dcf8c6;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+            --bg-color: #f0f2f5;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 90vh;
+        }
+
+        .chat-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .intro-box {
+            background: #eef7fd;
+            padding: 10px 15px;
+            font-size: 0.85em;
+            border-bottom: 1px solid #ddd;
+            color: #555;
+            text-align: center;
+        }
+
+        .chat-window {
+            flex: 1;
+            background-color: var(--chat-bg);
+            background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 0.95em;
+            position: relative;
+            line-height: 1.4;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            word-wrap: break-word;
+        }
+
+        .message.incoming {
+            align-self: flex-start;
+            background: var(--msg-in);
+            border-top-left-radius: 2px;
+        }
+
+        .message.outgoing {
+            align-self: flex-end;
+            background: var(--msg-out);
+            border-top-right-radius: 2px;
+        }
+
+        .options-area {
+            background: #f0f0f0;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            border-top: 1px solid #ddd;
+        }
+
+        .option-btn {
+            background: white;
+            border: 1px solid #ccc;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 0.9em;
+            transition: all 0.2s;
+            outline: none;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            background: #f9f9f9;
+            border-color: var(--secondary-color);
+        }
+
+        .option-btn.correct { background-color: #d4edda !important; border-color: var(--success-color) !important; }
+        .option-btn.incorrect { background-color: #f8d7da !important; border-color: var(--error-color) !important; }
+        .option-btn.disabled { cursor: default; opacity: 0.7; }
+
+        .controls {
+            padding: 10px;
+            display: flex;
+            justify-content: space-around;
+            background: #fff;
+            border-top: 1px solid #ddd;
+        }
+
+        .action-btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            font-size: 0.9em;
+        }
+
+        .btn-reset { background: #95a5a6; }
+        .btn-sol { background: #f39c12; }
+
+        @media (max-width: 480px) {
+            .container { height: 95vh; }
+            .chat-header { font-size: 1em; padding: 10px; }
+            .option-btn { padding: 10px; font-size: 0.85em; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="chat-header">Russisch-Chat: Sprech-Verben</div>
+    
+    <div class="intro-box">
+        Wähle die richtige Antwort, um den Dialog fortzuführen.
+    </div>
+
+    <div class="chat-window" id="chatWindow"></div>
+
+    <div class="options-area" id="optionsArea"></div>
+
+    <div class="controls">
+        <button class="action-btn btn-reset" onclick="resetChat()">Reset</button>
+        <button class="action-btn btn-sol" onclick="showSolution()">Lösung</button>
+    </div>
+</div>
+
+<script>
+    const dialog = [
+        {
+            in: "Привет! Ты вчера был у бабушки?",
+            opts: [
+                { t: "Да, она мне сказала интересную историю.", c: false },
+                { t: "Да, она мне рассказаala интересную историю.", c: true, ru: "Да, она мне рассказала интересную историю." }
+            ],
+            msg: "РАССКАЗАЛА ist richtig für umfangreiche Geschichten."
+        },
+        {
+            in: "Классно! А она что-нибудь про меня спрашивала?",
+            opts: [
+                { t: "Да, она сказала, что ты молодец.", c: true },
+                { t: "Да, она разговаривала, что ты молодец.", c: false }
+            ],
+            msg: "СКАЗАЛА leitet kurze Informationen oder Zitate ein."
+        },
+        {
+            in: "Слушай, у меня проблема. Не знаю, что делать.",
+            opts: [
+                { t: "Хочешь рассказать об этом?", c: false },
+                { t: "Хочешь поговорить об этом?", c: true }
+            ],
+            msg: "ПОГОВОРИТЬ bedeutet 'sich unterhalten/austauschen' über ein Thema."
+        },
+        {
+            in: "Да, давай. А во сколько ты будешь дома?",
+            opts: [
+                { t: "Мама сказала, что я буду дома в семь.", c: true },
+                { t: "Мама рассказала, что я буду дома в семь.", c: false }
+            ],
+            msg: "СКАЗАЛА wird für kurze Fakten wie Uhrzeiten genutzt."
+        },
+        {
+            in: "Кстати, как твой русский? Ты занимаешься?",
+            opts: [
+                { t: "Да, вчера я долго разговаривал с носителем языка.", c: true },
+                { t: "Да, вчера я долго сказал с носителем языка.", c: false }
+            ],
+            msg: "РАЗГОВАРИВАЛ betont den Prozess des Sprechens/Dialogs."
+        },
+        {
+            in: "Здорово! А ты слышал новость про Ивана?",
+            opts: [
+                { t: "Нет, скажи мне всё!", c: false },
+                { t: "Нет, расскажи мне всё!", c: true }
+            ],
+            msg: "РАССКАЖИ fordert einen ausführlichen Bericht/Neuigkeit an."
+        },
+        {
+            in: "Он уехал в Москву и никому не признался.",
+            opts: [
+                { t: "Странно, он мне ничего не сказал.", c: true },
+                { t: "Странно, он мне ничего не разговаривал.", c: false }
+            ],
+            msg: "СКАЗАЛ bedeutet hier 'erwähnen' (kurze Info)."
+        },
+        {
+            in: "Ладно, а ты смотрел новый фильм вчера?",
+            opts: [
+                { t: "Да, завтра подробно всё расскажу.", c: true },
+                { t: "Да, завтра подробно всё скажу.", c: false }
+            ],
+            msg: "РАССКАЖУ passt perfekt zu 'подробно' (ausführlich)."
+        },
+        {
+            in: "Ок. Почему ты вчера не брал трубку, когда я звонил?",
+            opts: [
+                { t: "Я долго сказал по другому телефону.", c: false },
+                { t: "Я долго разговаривал по другому телефону.", c: true }
+            ],
+            msg: "РАЗГОВАРИВАЛ beschreibt die Dauer des Telefonats."
+        },
+        {
+            in: "Понятно. Тогда до вечера?",
+            opts: [
+                { t: "Да, нам нужно о многом поговорить.", c: true },
+                { t: "Да, нам нужно о многом сказать.", c: false }
+            ],
+            msg: "ПОГОВОРИТЬ steht für ein klärendes Gespräch/Austausch."
+        }
+    ];
+
+    let currentStep = 0;
+    const chatWindow = document.getElementById('chatWindow');
+    const optionsArea = document.getElementById('optionsArea');
+
+    function renderStep() {
+        if (currentStep >= dialog.length) {
+            optionsArea.innerHTML = '<div style="text-align:center; color:green; font-weight:bold;">Dialog beendet! Gut gemacht.</div>';
+            return;
+        }
+
+        const step = dialog[currentStep];
+        
+        // Incoming message
+        const inMsg = document.createElement('div');
+        inMsg.className = 'message incoming';
+        inMsg.innerText = step.in;
+        chatWindow.appendChild(inMsg);
+        scrollToBottom();
+
+        // Options
+        optionsArea.innerHTML = '';
+        step.opts.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt.ru || opt.t;
+            btn.onclick = () => handleChoice(idx);
+            optionsArea.appendChild(btn);
+        });
+    }
+
+    function handleChoice(idx) {
+        const step = dialog[currentStep];
+        const opt = step.opts[idx];
+        const btns = optionsArea.querySelectorAll('.option-btn');
+
+        if (opt.c) {
+            btns[idx].classList.add('correct');
+            btns.forEach(b => b.classList.add('disabled'));
+            
+            setTimeout(() => {
+                const outMsg = document.createElement('div');
+                outMsg.className = 'message outgoing';
+                outMsg.innerText = opt.ru || opt.t;
+                chatWindow.appendChild(outMsg);
+                scrollToBottom();
+                
+                currentStep++;
+                setTimeout(renderStep, 800);
+            }, 500);
+        } else {
+            btns[idx].classList.add('incorrect');
+            alert(step.msg);
+        }
+    }
+
+    function scrollToBottom() {
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    function resetChat() {
+        currentStep = 0;
+        chatWindow.innerHTML = '';
+        renderStep();
+    }
+
+    function showSolution() {
+        const btns = optionsArea.querySelectorAll('.option-btn');
+        dialog[currentStep].opts.forEach((opt, idx) => {
+            if (opt.c) btns[idx].classList.add('correct');
+        });
+    }
+
+    window.onload = renderStep;
+</script>
+
+</body>
+</html>
