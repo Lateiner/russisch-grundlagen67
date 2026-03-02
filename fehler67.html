@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russisch-Trainer: Fehlersuche (10 Fehler)</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-bg: #d4edda;
+            --success-border: #28a745;
+            --error-bg: #f8d7da;
+            --error-border: #dc3545;
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.8;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+        }
+
+        h1, h2 { text-align: center; color: var(--primary-color); margin-top: 0; }
+        h1 { font-size: 1.6em; }
+        h2 { font-size: 1.1em; color: var(--secondary-color); margin-bottom: 20px; }
+
+        .intro-box {
+            background: #eef7fd;
+            padding: 15px;
+            border-left: 5px solid var(--secondary-color);
+            margin-bottom: 25px;
+            border-radius: 4px;
+            font-size: 0.95em;
+        }
+
+        .text-area {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 25px;
+            border-radius: 8px;
+            font-size: 1.15em;
+            margin-bottom: 30px;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        /* Wörter, die korrigiert werden müssen */
+        .error-word {
+            color: #e74c3c;
+            font-weight: 600;
+            border-bottom: 2px dashed #e74c3c;
+            cursor: pointer;
+            padding: 0 4px;
+            transition: all 0.3s;
+        }
+
+        .error-word:hover {
+            background-color: #fff3f3;
+        }
+
+        /* Korrekt markierte Wörter */
+        .correct {
+            color: #155724 !important;
+            border-bottom: none !important;
+            background-color: var(--success-bg) !important;
+            cursor: default;
+            border-radius: 4px;
+        }
+
+        /* Auswahl-Popup */
+        .popup {
+            display: none;
+            position: absolute;
+            background: white;
+            border: 1px solid #ccc;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            z-index: 1000;
+            border-radius: 8px;
+            padding: 8px;
+            min-width: 160px;
+        }
+
+        .popup button {
+            display: block;
+            width: 100%;
+            padding: 10px 12px;
+            margin: 2px 0;
+            border: none;
+            background: none;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 1em;
+            color: var(--primary-color);
+        }
+
+        .popup button:hover {
+            background-color: #f0f7ff;
+            color: var(--secondary-color);
+        }
+
+        /* Footer Buttons */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            font-size: 1em;
+        }
+
+        .btn-reset { background-color: #95a5a6; }
+        .btn-sol { background-color: #f39c12; }
+
+        @media (max-width: 600px) {
+            .text-area { font-size: 1.05em; padding: 15px; }
+            .container { padding: 15px; }
+            .popup { width: 90%; position: fixed; left: 5% !important; top: 30% !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Russisch-Trainer: Fehlersuche</h1>
+    <h2>Finden und korrigieren Sie die 10 falschen Verben</h2>
+
+    <div class="intro-box">
+        <strong>Aufgabe:</strong> Im Text unten wurden Verben des Sprechens falsch verwendet. Klicken Sie auf ein <span style="color:#e74c3c; font-weight:bold;">rotes Wort</span> und wählen Sie die richtige Korrektur aus.
+    </div>
+
+    <div class="text-area" id="main-text">
+        Вчера в университете я <span class="error-word" id="w1" data-correct="поговорил">рассказал</span> с профессором. 
+        Он <span class="error-word" id="w2" data-correct="сказал">разговаривал</span> мне, что экзамен будет в понедельник. 
+        Профессор долго <span class="error-word" id="w3" data-correct="рассказывал">говорил</span> нам о новой книге. 
+        В коридоре я встретил Анну, и мы пять минут <span class="error-word" id="w4" data-correct="разговаривали">сказали</span>. 
+        Анна <span class="error-word" id="w5" data-correct="рассказала">сказала</span> мне очень смешной анекдот. 
+        Я <span class="error-word" id="w6" data-correct="сказал">рассказал</span> ей только одно слово: «Классно!». 
+        Потом мы <span class="error-word" id="w7" data-correct="поговорили">рассказали</span> о наших планах на лето. 
+        Вечером я <span class="error-word" id="w8" data-correct="рассказал">сказал</span> родителям всё о своём дне. 
+        Папа внимательно слушал и <span class="error-word" id="w9" data-correct="сказал">разговаривал</span>: «Молодец!». 
+        Теперь я хочу <span class="error-word" id="w10" data-correct="поговорить">сказать</span> с тобой об этом.
+    </div>
+
+    <!-- Universal-Popup für alle Korrekturen -->
+    <div id="popup" class="popup">
+        <button onclick="makeChoice('сказал')">сказал</button>
+        <button onclick="makeChoice('сказала')">сказала</button>
+        <button onclick="makeChoice('рассказал')">рассказал</button>
+        <button onclick="makeChoice('рассказала')">рассказала</button>
+        <button onclick="makeChoice('рассказывал')">рассказывал</button>
+        <button onclick="makeChoice('разговаривали')">разговаривали</button>
+        <button onclick="makeChoice('поговорил')">поговорил</button>
+        <button onclick="makeChoice('поговорили')">поговорили</button>
+        <button onclick="makeChoice('поговорить')">поговорить</button>
+    </div>
+
+    <div class="button-group">
+        <button class="action-btn btn-reset" onclick="resetGame()">Zurücksetzen</button>
+        <button class="action-btn btn-sol" onclick="showSolution()">Lösungen anzeigen</button>
+    </div>
+</div>
+
+<script>
+    let activeWordId = null;
+    const popup = document.getElementById('popup');
+    
+    // Speichern der ursprünglichen (falschen) Texte
+    const originalText = {
+        w1: "рассказал", w2: "разговаривал", w3: "говорил", 
+        w4: "сказали", w5: "сказала", w6: "рассказал", 
+        w7: "рассказали", w8: "сказал", w9: "разговаривал", w10: "сказать"
+    };
+
+    // Event Listener für Klicks auf Fehlerwörter
+    document.querySelectorAll('.error-word').forEach(word => {
+        word.addEventListener('click', (e) => {
+            if (word.classList.contains('correct')) return;
+            
+            activeWordId = word.id;
+            
+            // Popup anzeigen
+            popup.style.display = 'block';
+            
+            // Positionierung (versucht, innerhalb des Bildschirms zu bleiben)
+            let x = e.pageX;
+            let y = e.pageY;
+            
+            const popupWidth = 180;
+            if (x + popupWidth > window.innerWidth) {
+                x = window.innerWidth - popupWidth - 20;
+            }
+
+            popup.style.left = x + 'px';
+            popup.style.top = y + 'px';
+            
+            e.stopPropagation();
+        });
+    });
+
+    // Klick außerhalb schließt Popup
+    document.addEventListener('click', () => {
+        popup.style.display = 'none';
+    });
+
+    function makeChoice(choice) {
+        if (!activeWordId) return;
+        
+        const wordEl = document.getElementById(activeWordId);
+        const correctValue = wordEl.getAttribute('data-correct');
+        
+        if (choice === correctValue) {
+            wordEl.innerText = choice;
+            wordEl.classList.add('correct');
+        } else {
+            // Visuelles Feedback für falsche Wahl (Schütteln/Farbe)
+            wordEl.style.color = '#721c24';
+            wordEl.style.backgroundColor = '#f8d7da';
+            setTimeout(() => {
+                if(!wordEl.classList.contains('correct')) {
+                    wordEl.style.color = '#e74c3c';
+                    wordEl.style.backgroundColor = 'transparent';
+                }
+            }, 600);
+        }
+        
+        popup.style.display = 'none';
+        activeWordId = null;
+    }
+
+    function resetGame() {
+        document.querySelectorAll('.error-word').forEach(word => {
+            word.classList.remove('correct');
+            word.innerText = originalText[word.id];
+            word.style.color = '#e74c3c';
+            word.style.backgroundColor = 'transparent';
+        });
+        popup.style.display = 'none';
+    }
+
+    function showSolution() {
+        document.querySelectorAll('.error-word').forEach(word => {
+            word.innerText = word.getAttribute('data-correct');
+            word.classList.add('correct');
+        });
+        popup.style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
