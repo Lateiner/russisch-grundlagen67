@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russisch-Trainer: Szenarien-Entscheidung</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: var(--primary-color);
+        }
+
+        h1 { font-size: 1.6em; margin-bottom: 5px; }
+        h2 { font-size: 1.1em; font-weight: normal; margin-bottom: 25px; color: var(--secondary-color); }
+
+        .intro-box {
+            background: #eef7fd;
+            padding: 15px;
+            border-left: 5px solid var(--secondary-color);
+            margin-bottom: 30px;
+            border-radius: 4px;
+            font-size: 0.95em;
+        }
+
+        /* Aufgaben-Karten */
+        .scenario-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.2s;
+        }
+
+        .scenario-card:hover {
+            border-color: var(--secondary-color);
+        }
+
+        .scenario-text {
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: block;
+            color: var(--primary-color);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .option-btn {
+            padding: 12px;
+            background-color: #f8f9fa;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.2s;
+            text-align: center;
+            outline: none;
+        }
+
+        .option-btn:hover:not(.locked) {
+            background-color: #e9ecef;
+            border-color: var(--secondary-color);
+        }
+
+        /* Status-Klassen */
+        .correct {
+            background-color: var(--success-color) !important;
+            border-color: #219150 !important;
+            color: white !important;
+        }
+
+        .incorrect {
+            background-color: var(--error-color) !important;
+            border-color: #c0392b !important;
+            color: white !important;
+        }
+
+        .locked {
+            cursor: default;
+        }
+
+        /* Footer Buttons */
+        .footer-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .control-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1em;
+            color: white;
+            transition: opacity 0.2s;
+        }
+
+        .btn-reset { background-color: #95a5a6; }
+        .btn-sol { background-color: #f39c12; }
+        .control-btn:hover { opacity: 0.9; }
+
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .options-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Russisch-Trainer: Szenarien</h1>
+    <h2>Welches Verb passt zur Situation?</h2>
+
+    <div class="intro-box">
+        <strong>Anleitung:</strong> Lesen Sie die beschriebene Situation. Welches Verb ist hier am passendsten? Klicken Sie auf die richtige Antwort.
+        <br><em>Tipp:</em> Achten Sie auf den Umfang der Information (kurz vs. lang) und ob es ein Dialog oder ein Monolog ist.
+    </div>
+
+    <div id="quiz-container">
+        <!-- Szenario 1 -->
+        <div class="scenario-card" data-correct="сказать">
+            <span class="scenario-text">1. Du möchtest jemanden auf der Straße nur kurz nach der Uhrzeit fragen.</span>
+            <div class="options-grid">
+                <button class="option-btn" onclick="checkAnswer(this, 'сказать')">СКАЗАТЬ</button>
+                <button class="option-btn" onclick="checkAnswer(this, 'разговаривать')">РАЗГОВАРИВАТЬ</button>
+                <button class="option-btn" onclick="checkAnswer(this, 'рассказывать')">РАССКАЗЫВАТЬ</button>
+            </div>
+        </div>
+
+        <!-- Szenario 2 -->
+        <div class="scenario-card" data-correct="разговаривать">
+            <span class="scenario-text">2. Du sitzt mit einem Freund im Café und ihr plaudert eine Stunde lang über Gott und die Welt.</span>
+            <div class="options-grid">
+                <button class="option-btn" onclick="checkAnswer(this, 'сказать')">СКАЗАТЬ</button>
+                <button class="option-btn" onclick="checkAnswer(this, 'разговаривать')">РАЗГОВАРИВАТЬ</button>
+                <button class="option-btn" onclick="checkAnswer(this, 'рассказать')">РАССКАЗАТЬ</button>
+            </div>
+        </div>
+
+        <!-- Szenario 3 -->
+        <div class="scenario-card" data-correct="рассказать">
+            <span class="scenario-text">3. Du kommst aus dem Urlaub zurück und möchtest deiner Familie ausführlich von deinen Erlebnissen berichten.</span>
+            <div class="options-grid">
+                <button class="option-btn" onclick="checkAnswer(this, 'сказать')">СКАЗАТЬ</button>
+                <button class="option-btn" onclick="checkAnswer(this, 'поговорить')">ПОГОВОРИТЬ</button>
+                <button class="option-btn" onclick="checkAnswer(this, 'рассказать')">РАССКАЗАТЬ</button>
+            </div>
+        </div>
+
+        <!-- Szenario 4 -->
+        <div class="scenario-card" data-correct="сказать">
+            <span class="scenario-text">4. Du möchtest deinem Chef nur kurz mitteilen, dass du heute krank bist.</span>
+            <div class="options-grid">
+                <button class="option-btn" onclick="checkAnswer(this, 'сказать')">СКАЗАТЬ</button>
+                <button class="option-btn" onclick="checkAnswer(this, 'разговаривать')">РАЗГОВАРИВАТЬ</button>
+                <button class="option-btn" onclick="checkAnswer(this, 'рассказывать')">РАССКАЗЫВАТЬ</button>
+            </div>
+        </div>
+
+        <!-- Szenario 5 -->
+        <div class="scenario-card" data-correct="рассказывать">
+            <span class="scenario-text">5. Ein Lehrer erklärt der Klasse über 20 Minuten hinweg ein neues Thema in Geschichte.</span>
+            <div class="options-grid">
+                <button class="option-btn" onclick="checkAnswer(this, 'сказать')">СКАЗАТЬ</button>
+                <button class="option-btn" onclick="checkAnswer(this, 'поговорить')">ПОГОВОРИТЬ</button>
+                <button class="option-btn" onclick="checkAnswer(this, 'рассказывать')">РАССКАЗЫВАТЬ</button>
+            </div>
+        </div>
+
+        <!-- Szenario 6 -->
+        <div class="scenario-card" data-correct="разговаривать">
+            <span class="scenario-text">6. Zwei Politiker führen im Fernsehen eine Debatte und tauschen Argumente aus.</span>
+            <div class="options-grid">
+                <button class="option-btn" onclick="checkAnswer(this, 'сказать')">СКАЗАТЬ</button>
+                <button class="option-btn" onclick="checkAnswer(this, 'разговаривать')">РАЗГОВАРИВАТЬ</button>
+                <button class="option-btn" onclick="checkAnswer(this, 'рассказать')">РАССКАЗАТЬ</button>
+            </div>
+        </div>
+
+        <!-- Szenario 7 -->
+        <div class="scenario-card" data-correct="сказать">
+            <span class="scenario-text">7. Du hast ein Geheimnis und flüsterst deiner Freundin nur einen einzigen Satz ins Ohr.</span>
+            <div class="options-grid">
+                <button class="option-btn" onclick="checkAnswer(this, 'сказать')">СКАЗАТЬ</button>
+                <button class="option-btn" onclick="checkAnswer(this, 'разговаривать')">РАЗГОВАРИВАТЬ</button>
+                <button class="option-btn" onclick="checkAnswer(this, 'рассказывать')">РАССКАЗЫВАТЬ</button>
+            </div>
+        </div>
+
+        <!-- Szenario 8 -->
+        <div class="scenario-card" data-correct="рассказывать">
+            <span class="scenario-text">8. Eine Großmutter liest ihren Enkeln ein langes Märchen vor.</span>
+            <div class="options-grid">
+                <button class="option-btn" onclick="checkAnswer(this, 'сказать')">СКАЗАТЬ</button>
+                <button class="option-btn" onclick="checkAnswer(this, 'разговаривать')">РАЗГОВАРИВАТЬ</button>
+                <button class="option-btn" onclick="checkAnswer(this, 'рассказывать')">РАССКАЗЫВАТЬ</button>
+            </div>
+        </div>
+
+        <!-- Szenario 9 -->
+        <div class="scenario-card" data-correct="разговаривать">
+            <span class="scenario-text">9. Du übst deine Russisch-Aussprache, indem du dich mit einem Muttersprachler unterhältst.</span>
+            <div class="options-grid">
+                <button class="option-btn" onclick="checkAnswer(this, 'сказать')">СКАЗАТЬ</button>
+                <button class="option-btn" onclick="checkAnswer(this, 'разговаривать')">РАЗГОВАРИВАТЬ</button>
+                <button class="option-btn" onclick="checkAnswer(this, 'рассказать')">РАССКАЗАТЬ</button>
+            </div>
+        </div>
+
+        <!-- Szenario 10 -->
+        <div class="scenario-card" data-correct="сказать">
+            <span class="scenario-text">10. Jemand fragt dich, ob du Kaffee magst, und du antwortest nur mit „Ja“.</span>
+            <div class="options-grid">
+                <button class="option-btn" onclick="checkAnswer(this, 'сказать')">СКАЗАТЬ</button>
+                <button class="option-btn" onclick="checkAnswer(this, 'разговаривать')">РАЗГОВАРИВАТЬ</button>
+                <button class="option-btn" onclick="checkAnswer(this, 'рассказать')">РАССКАЗАТЬ</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-controls">
+        <button class="control-btn btn-reset" onclick="resetQuiz()">Zurücksetzen</button>
+        <button class="control-btn btn-sol" onclick="showSolutions()">Lösungen anzeigen</button>
+    </div>
+</div>
+
+<script>
+    function checkAnswer(button, type) {
+        const card = button.closest('.scenario-card');
+        const correctAnswer = card.getAttribute('data-correct').toLowerCase();
+        const selectedAnswer = button.innerText.toLowerCase();
+
+        // Alle Buttons in dieser Karte sperren
+        const buttons = card.querySelectorAll('.option-btn');
+        buttons.forEach(btn => btn.classList.add('locked'));
+
+        if (selectedAnswer === correctAnswer || (correctAnswer === 'поговорить' && selectedAnswer === 'разговаривать')) {
+            button.classList.add('correct');
+        } else {
+            button.classList.add('incorrect');
+            // Die richtige Lösung markieren
+            buttons.forEach(btn => {
+                if (btn.innerText.toLowerCase() === correctAnswer) {
+                    btn.classList.add('correct');
+                }
+            });
+        }
+    }
+
+    function resetQuiz() {
+        const buttons = document.querySelectorAll('.option-btn');
+        buttons.forEach(btn => {
+            btn.classList.remove('correct', 'incorrect', 'locked');
+        });
+    }
+
+    function showSolutions() {
+        const cards = document.querySelectorAll('.scenario-card');
+        cards.forEach(card => {
+            const correctAnswer = card.getAttribute('data-correct').toLowerCase();
+            const buttons = card.querySelectorAll('.option-btn');
+            
+            buttons.forEach(btn => {
+                btn.classList.add('locked');
+                btn.classList.remove('correct', 'incorrect');
+                if (btn.innerText.toLowerCase() === correctAnswer) {
+                    btn.classList.add('correct');
+                }
+            });
+        });
+    }
+</script>
+
+</body>
+</html>
